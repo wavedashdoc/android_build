@@ -4327,9 +4327,8 @@ name := $(TARGET_PRODUCT)
 ifeq ($(TARGET_BUILD_TYPE),debug)
   name := $(name)_debug
 endif
-name := $(name)-ota-$(FILE_NAME_TAG)
 
-INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name).zip
+PD_TARGET_PACKAGE := $(PRODUCT_OUT)/$(PIXELDUST_VERSION).zip
 
 INTERNAL_OTA_METADATA := $(PRODUCT_OUT)/ota_metadata
 
@@ -4364,9 +4363,10 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) \
 	@echo "Package OTA: $@"
 	$(call build-ota-package-target,$@,-k $(KEY_CERT_PAIR) --backup=$(backuptool) --output_metadata_path $(INTERNAL_OTA_METADATA))
 
-.PHONY: otapackage bacon
+.PHONY: otapackage bacon pixeldust
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 bacon: otapackage
+pixeldust: otapackage
 ifneq ($(TARGET_CUSTOM_RELEASETOOL),)
 	$(hide) \
 	$(TARGET_CUSTOM_RELEASETOOL)
@@ -4399,6 +4399,10 @@ $(INTERNAL_OTA_RETROFIT_DYNAMIC_PARTITIONS_PACKAGE_TARGET): $(BUILT_TARGET_FILES
 otapackage otardppackage: $(INTERNAL_OTA_RETROFIT_DYNAMIC_PARTITIONS_PACKAGE_TARGET)
 
 endif # BOARD_BUILD_RETROFIT_DYNAMIC_PARTITIONS_OTA_PACKAGE
+
+	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(PD_TARGET_PACKAGE)
+	$(hide) $(MD5SUM) $(PD_TARGET_PACKAGE) > $(PD_TARGET_PACKAGE).md5sum
+	@echo -e ${CL_CYN}"Package Complete: $(PD_TARGET_PACKAGE)"${CL_RST}
 
 endif    # build_ota_package
 
