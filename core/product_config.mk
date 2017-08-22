@@ -320,6 +320,21 @@ ifdef PRODUCT_DEFAULT_DEV_CERTIFICATE
   endif
 endif
 
+# We might want to skip items listed in PRODUCT_COPY_FILES for
+# various reasons. This is useful for replacing a binary module with one
+# built from source. This should be a list of destination files under $OUT
+PRODUCT_COPY_FILES_OVERRIDES := \
+	$(addprefix %:, $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_COPY_FILES_OVERRIDES)))
+
+ifneq ($(PRODUCT_COPY_FILES_OVERRIDES),)
+    PRODUCT_COPY_FILES := $(filter-out $(PRODUCT_COPY_FILES_OVERRIDES), $(PRODUCT_COPY_FILES))
+endif
+
+.PHONY: listcopies
+listcopies:
+	@echo "Copy files: $(PRODUCT_COPY_FILES)"
+	@echo "Overrides: $(PRODUCT_COPY_FILES_OVERRIDES)"
+
 ENFORCE_SYSTEM_CERTIFICATE := $(PRODUCT_ENFORCE_ARTIFACT_SYSTEM_CERTIFICATE_REQUIREMENT)
 ENFORCE_SYSTEM_CERTIFICATE_WHITELIST := $(PRODUCT_ARTIFACT_SYSTEM_CERTIFICATE_REQUIREMENT_WHITELIST)
 
