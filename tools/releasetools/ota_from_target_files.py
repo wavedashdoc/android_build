@@ -984,9 +984,7 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
       script.fstab["/system"].mount_point = system_mount_point
     script.Mount("/system")
     script.RunBackup("backup", "/system/system")
-    script.Unmount(system_mount_point)
-    if is_system_as_root:
-      script.fstab["/system"].mount_point = "/"
+    script.Unmount("/system")
 
   system_progress = 0.75
 
@@ -1042,13 +1040,9 @@ else if get_stage("%(bcb_dev)s") == "3/3" then
 
   if OPTIONS.backuptool:
     script.ShowProgress(0.02, 10)
-    if is_system_as_root:
-      script.fstab["/system"].mount_point = system_mount_point
     script.Mount("/system")
     script.RunBackup("restore", "/system/system")
-    script.Unmount(system_mount_point)
-    if is_system_as_root:
-      script.fstab["/system"].mount_point = "/"
+    script.Unmount("/system")
 
   boot_img = common.GetBootableImage(
       "boot.img", "boot.img", OPTIONS.input_tmp, "BOOT")
