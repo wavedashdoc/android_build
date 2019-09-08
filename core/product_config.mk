@@ -182,6 +182,7 @@ all_product_configs := $(call get-product-makefiles,\
 else
  ifneq ($(PIXELDUST_BUILD),)
     all_product_configs := $(shell ls device/*/$(PIXELDUST_BUILD)/pixeldust.mk)
+    all_product_configs += $(shell ls vendor/*/products/$(PIXELDUST_BUILD)/pixeldust_$(PIXELDUST_BUILD).mk)
   else
     # Read in all of the product definitions specified by the AndroidProducts.mk
     # files in the tree.
