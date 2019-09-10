@@ -4379,7 +4379,7 @@ ifeq ($(TARGET_BUILD_TYPE),debug)
   name := $(name)_debug
 endif
 
-PD_TARGET_PACKAGE := $(PRODUCT_OUT)/$(PIXELDUST_VERSION).zip
+INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name)-$(PIXELDUST_VERSION).zip
 
 INTERNAL_OTA_METADATA := $(PRODUCT_OUT)/ota_metadata
 
@@ -4413,6 +4413,8 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) \
 	    build/make/tools/releasetools/ota_from_target_files
 	echo -e ${CL_YLW}"Package OTA:"${CL_RST}" $@"
 	$(call build-ota-package-target,$@,-k $(KEY_CERT_PAIR) --backup=$(backuptool) --output_metadata_path $(INTERNAL_OTA_METADATA))
+
+PD_TARGET_PACKAGE := $(PRODUCT_OUT)/$(PIXELDUST_VERSION).zip
 
 .PHONY: otapackage bacon pixeldust
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
